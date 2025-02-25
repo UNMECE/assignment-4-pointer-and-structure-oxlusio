@@ -1,15 +1,13 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-struct _Item
-{
-double price;
-char *sku;
-char *name;
-char *category;
-char *description;
+#include <string> // string library
+
+struct Item {
+	double price;
+	std::string sku;
+	std::string name;
+	std:: string category;
 };
 
-typedef struct _Item Item;
-
-#endif
+#endif 

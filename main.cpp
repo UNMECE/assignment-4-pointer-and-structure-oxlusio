@@ -1,16 +1,15 @@
 #include <iostream>
 #include <string.h>
-#include <stdlib.h>
 #include "item.h" // ITEM_H
 
-void add_item(Item *item_list, double price, char *sku, char *category,char *name, int index);
-void free_items(Item *item_list, int size);
+void add_item(Item *item_list, double price, const std::string &sku, const std::string &category, const std::string &name, int index);
+void free_items(Item *item_list);
 double average_price(Item *item_list, int size);
 void print_items(Item *item_list, int size);
 
 int main(int argc, char *argv[]) {
 	const int size = 5;
-	Item *item_list = (Item *)malloc(size *sizeof(Item));
+	Item *item_list = new Item[size]; 
 
 	add_item(item_list, 5.00, "19282","breakfast", "reese's cereal", 0);
 	add_item(item_list, 3.25, "79862", "dairy", "milk", 1);
@@ -21,53 +20,50 @@ int main(int argc, char *argv[]) {
 	print_items(item_list, size);
 
 	// calculate and print average price
-	printf("Average Price: %.3f\n", average_price(item_list, size));
+	std::cout << "Average Price: " << average_price(item_list, size) << std::endl;
 
 	// search for sku if provided
 	if (argc == 2) {
-		char *search_sku = argv[1];
+		std::string search_sku = argv[1];
 		int ct = 0;
-		while (ct < size && strcmp(item_list[ct].sku, search_sku) != 0) {
+		while (ct < size && item_list[ct].sku != search_sku) {
 			ct++;
 			}
 
 			if (ct < size) {
-				printf("Item found:\n");
-				printf("---------------\n");
-				printf("Item Name: %s\n", item_list[ct].name);
-				printf("Item SKU: %s\n", item_list[ct].sku);
-				printf("Item Category: %s\n", item_list[ct].category);
-				printf("Item Price = %.4f\n", item_list[ct].price);
+				std::cout << "Item found:\n";
+				std::cout << "---------------\n";
+				std::cout << "Item Name: " << item_list[ct].name << std::endl;
+				std::cout << "Item SKU: " << item_list[ct].sku << std::endl;
+				std::cout << "Item Category: " << item_list[ct].category << std::endl;
+				std::cout << "Item Price = " << item_list[ct].price << std::endl;
 			} else {
-				printf("Item not found.\n");
+				std::cout << "Item not found.\n" << std::endl;
 			}
 		}
 
-		free_items(item_list, size);
-
-
+		free_items(item_list);
 		return 0;
 }
 
 // function to add an item to the list
-void add_item(Item *item_list, double price, char *sku, char *category, char *name, int index) {
+void add_item(Item *item_list, double price, const std::string &sku, const std::string &category, const std::string &name, int index) {
 	item_list[index].price = price;
-	item_list[index].sku - strdup(sku);
-	item_list[index].category = strdup(category);
-	item_list[index].name = strdup(name);
-	item_list[index].description = strdup("");
-	}
+	item_list[index].sku = sku;
+	item_list[index].category = category;
+	item_list[index].name = name;
+}
 
 // function to print all items
 void print_items(Item *item_list, int size) {
 	int i;
 	for (i = 0; i < size; i++) {
-		printf("################\n");
-		printf("Item Name: %s\n", item_list[i].name);
-		printf("Item SKU: %s\n", item_list[i].sku);
-		printf("Item Category: %s\n", item_list[i].category);
-		printf("Item Price: %.4f\n", item_list[i].price);
-		printf("################\n");
+		 std::cout << "###############" << std::endl;
+		 std::cout << "item name = " << item_list[i].name << std::endl;
+		 std::cout << "item sku = " << item_list[i].sku << std::endl;
+		 std::cout << "item category = " << item_list[i].category << std::endl;						        
+		 std::cout << "item price = " << item_list[i].price << std::endl;
+		 std::cout << "###############" << std::endl;
 	}
 }
 
@@ -82,13 +78,6 @@ double average_price(Item *item_list, int size) {
 }
 
 // function to free dynamically allcoated memory for all items
-void free_items(Item *item_list, int size) {
-	int i;
-	for (i = 0; i < size; i++) {
-		free(item_list[i].sku);
-		free(item_list[i].name);
-		free(item_list[i].category);
-		free(item_list[i].description);
-	}
-	free(item_list); // free array itse;f
+void free_items(Item *item_list) {
+	delete[] item_list; // free array itself
 }
